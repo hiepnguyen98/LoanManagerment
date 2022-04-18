@@ -1,0 +1,15 @@
+D:\Learn\DotNet\IdentityProject\Dtos\bin\Debug\net6.0\Dtos.deps.json
+D:\Learn\DotNet\IdentityProject\Dtos\bin\Debug\net6.0\Dtos.dll
+D:\Learn\DotNet\IdentityProject\Dtos\bin\Debug\net6.0\ref\Dtos.dll
+D:\Learn\DotNet\IdentityProject\Dtos\bin\Debug\net6.0\Dtos.pdb
+D:\Learn\DotNet\IdentityProject\Dtos\bin\Debug\net6.0\Infrastructure.dll
+D:\Learn\DotNet\IdentityProject\Dtos\bin\Debug\net6.0\Infrastructure.pdb
+D:\Learn\DotNet\IdentityProject\Dtos\obj\Debug\net6.0\Dtos.csproj.AssemblyReference.cache
+D:\Learn\DotNet\IdentityProject\Dtos\obj\Debug\net6.0\Dtos.GeneratedMSBuildEditorConfig.editorconfig
+D:\Learn\DotNet\IdentityProject\Dtos\obj\Debug\net6.0\Dtos.AssemblyInfoInputs.cache
+D:\Learn\DotNet\IdentityProject\Dtos\obj\Debug\net6.0\Dtos.AssemblyInfo.cs
+D:\Learn\DotNet\IdentityProject\Dtos\obj\Debug\net6.0\Dtos.csproj.CoreCompileInputs.cache
+D:\Learn\DotNet\IdentityProject\Dtos\obj\Debug\net6.0\Dtos.csproj.CopyComplete
+D:\Learn\DotNet\IdentityProject\Dtos\obj\Debug\net6.0\Dtos.dll
+D:\Learn\DotNet\IdentityProject\Dtos\obj\Debug\net6.0\ref\Dtos.dll
+D:\Learn\DotNet\IdentityProject\Dtos\obj\Debug\net6.0\Dtos.pdb

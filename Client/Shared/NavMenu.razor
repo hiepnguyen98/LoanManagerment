@@ -1,0 +1,43 @@
+﻿<Sider Collapsible Collapsed=@collapsed OnCollapse=@onCollapse Style="position:sticky; left:0; top:0; height:100vh; overflow: auto">
+    <div class="logo" />
+    <Menu Theme="MenuTheme.Dark" DefaultSelectedKeys=@(new[]{"1"}) Mode="MenuMode.Inline">
+        <MenuItem Key="Dashboard" Icon="pie-chart" RouterLink="/">
+				Dashboard
+        </MenuItem>
+        <MenuItem Key="customer" Icon="user" RouterLink="customer">
+            Khách Hàng
+        </MenuItem>
+        
+        <MenuItem Key="transaction" Icon="transaction" RouterLink="transaction">
+            Giao dịch
+        </MenuItem>
+    </Menu>
+</Sider>
+
+@code {
+    bool collapsed;
+    public int W {get;set;}
+
+    void onCollapse(bool collapsed) {
+        Console.WriteLine(collapsed);
+        this.collapsed =collapsed;
+    }
+
+    RenderFragment TransactionMenuTemplate =
+	@<span>
+		<Icon Type="transaction" Theme="outline"/>
+		<span>Giao dịch</span>
+	</span>;
+}
+
+<style>
+    .logo {
+        height: 32px;
+        background: rgba(255, 255, 255, 0.2);
+        margin: 16px;
+    }
+
+    .site-layout .site-layout-background {
+        background: #fff;
+    }
+</style>

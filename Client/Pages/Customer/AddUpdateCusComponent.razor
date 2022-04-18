@@ -1,0 +1,57 @@
+﻿@using Dtos
+<Drawer Closable="true" Visible="@IsOpen" Width="500" Title="@("Thêm Khách Hàng")" Placement="right" OnClose="ThisOnClose">
+    <div>
+        <AntDesign.Row>
+            <Col Span="24">
+                <Form Model="@Customer" 
+                      LabelColSpan="8"
+                      WrapperColSpan="16"
+                      OnFinish="AddUpdateCustomer"
+                        ValidateOnChange="true">
+                    <FormItem Label="Name" Rules=@(new FormValidationRule[]{ new FormValidationRule{ Required = true } })>
+                        <Input @bind-Value="@context.Name"/>
+                    </FormItem>
+                    <FormItem Label="Address" Rules=@(new FormValidationRule[]{ new FormValidationRule{ Required = true } })>
+                        <Input @bind-Value="@context.Address" />
+                    </FormItem>
+                    <FormItem Label="PhoneNumber" Rules=@(new FormValidationRule[]{ new FormValidationRule{ Required = true ,Type=FormFieldType.String, Len=10 } })>
+                        <Input @bind-Value="@context.PhoneNumber" />
+                    </FormItem>
+                    <FormItem Label="Email">
+                        <Input @bind-Value="@context.Email" />
+                    </FormItem>
+                    <FormItem WrapperColOffset="8" WrapperColSpan="16">
+                        <Button Type="@AntDesign.ButtonType.Primary" HtmlType="submit">
+                            Lưu
+                        </Button>
+                    </FormItem>
+                </Form>
+            </Col>
+        </AntDesign.Row>
+    </div>
+</Drawer>
+
+@code {
+    [Parameter]
+    public bool IsOpen { get; set; }
+
+    [Parameter]
+    public EventCallback OnClose { get; set; }
+
+    [Parameter]
+    public CustomerDto Customer { get; set; } = new CustomerDto();
+
+    [Parameter]
+    public EventCallback<CustomerDto> AddCustomer { get; set; }
+
+    //bool _drawerOpen = false;
+    async Task ThisOnClose()
+    {
+        await OnClose.InvokeAsync();
+    }
+
+    async Task AddUpdateCustomer()
+    {
+        await AddCustomer.InvokeAsync(Customer);
+    }
+}

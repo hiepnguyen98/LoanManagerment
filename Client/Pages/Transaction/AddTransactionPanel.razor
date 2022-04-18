@@ -1,0 +1,91 @@
+﻿@using Dtos
+@using Infrastructure.Enums
+<Drawer Closable="true" Visible="@IsOpen" Width="500" Title="@("Thêm giao dịch")" Placement="right" OnClose="ThisOnClose">
+    <div>
+        <AntDesign.Row>
+            <Col Span="24">
+                <Form Model="@transactionDto" 
+                      LabelColSpan="7"
+                      WrapperColSpan="17"
+                      OnFinish="ThisAddTransaction"
+                        ValidateOnChange="true">
+                    <FormItem Label="Khách Hàng" Rules=@(new FormValidationRule[]{ new FormValidationRule{ Required = true } })>
+                        <Select DataSource="@Customers"
+                                @bind-Value="@context.CustomerId"
+                                LabelName="@nameof(CustomerDto.Name)"
+                                ValueName="@nameof(CustomerDto.Id)"
+                                Placeholder="Chọn Khách hàng"
+                                EnableSearch>
+                        </Select>
+                    </FormItem> 
+                    
+                    <FormItem Label="Loại giao dịch" Rules=@(new FormValidationRule[]{ new FormValidationRule{ Required = true } })>
+                        <RadioGroup @bind-Value="@context.TransactionType" >
+                            <Radio Value="@TransactionType.Loan">Cho vay</Radio>
+                            <Radio Value="@TransactionType.Borrow">Vay</Radio>
+                        </RadioGroup>
+                    </FormItem>
+                    
+                    <FormItem Label="Số tiền" Rules=@(new FormValidationRule[]{ new FormValidationRule{ Required = true } })>
+                        <Input @bind-Value="@context.Amount"/>
+                    </FormItem>
+
+                    <FormItem Label="Tính Lãi Theo" Rules=@(new FormValidationRule[]{ new FormValidationRule{ Required = true } })>
+                        <RadioGroup @bind-Value="@context.InterestType" >
+                            <Radio Value="InterestType.Daily">Ngàn/Ngày</Radio>
+                            <Radio Value="InterestType.Monthly">Tháng(%)</Radio>
+                            <Radio Value="InterestType.DayPerMilion">Ngày/1 Triệu/Ngày</Radio>
+                        </RadioGroup>
+                    </FormItem>
+                    @if(context.InterestType == InterestType.Monthly || context.InterestType == InterestType.Yearly){
+                        <FormItem Label="Lãi Xuất(%)" Rules=@(new FormValidationRule[]{ new FormValidationRule{ Required = true } })>
+                            <Input Placeholder="%/tháng" @bind-Value="@context.InterestRate" TValue="float"/>
+                        </FormItem>
+                    }else{
+                        <FormItem Label="Lãi Xuất(Ngàn)" Rules=@(new FormValidationRule[]{ new FormValidationRule{ Required = true } })>
+                            <Input Placeholder="Ngàn/ngày" @bind-Value="@context.InterestAmount"/>
+                        </FormItem>
+                    }
+                    <FormItem Label="Ngày trả" Rules=@(new FormValidationRule[]{ new FormValidationRule{ Required = true } })>
+                        <DatePicker @bind-Value="@context.DueDate" Format="dd/MM/yyyy" TValue="DateTime" Picker="@DatePickerType.Date"/>
+                    </FormItem>
+                    <FormItem Label="Ghi chú" Rules=@(new FormValidationRule[]{ new FormValidationRule{ Required = true ,Type=FormFieldType.String, Len=10 } })>
+                        <Input @bind-Value="@context.Description" />
+                    </FormItem>
+                    <FormItem WrapperColOffset="8" WrapperColSpan="16">
+                        <Button Type="@AntDesign.ButtonType.Primary" HtmlType="submit">
+                            Lưu
+                        </Button>
+                    </FormItem>
+                </Form>
+            </Col>
+        </AntDesign.Row>
+    </div>
+</Drawer>
+
+@code {
+    [Parameter]
+    public bool IsOpen { get; set; }
+
+    [Parameter]
+    public EventCallback OnClose { get; set; }
+
+    [Parameter]
+    public EventCallback<TransactionDto> AddTransaction { get; set; }
+
+    [Parameter]
+    public List<CustomerDto> Customers { get; set; } = new List<CustomerDto>();
+
+    TransactionDto transactionDto = new TransactionDto(){DueDate = DateTime.Now};
+
+    //bool _drawerOpen = false;
+    async Task ThisOnClose()
+    {
+        await OnClose.InvokeAsync();
+    }
+
+    async Task ThisAddTransaction()
+    {
+        await AddTransaction.InvokeAsync(transactionDto);
+    }
+}

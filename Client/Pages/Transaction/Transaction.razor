@@ -1,0 +1,276 @@
+﻿@page "/transaction"
+
+@using Dtos
+@using Client.Services.ApiServices
+@using Infrastructure.Enums
+@using Infrastructure.Helper
+
+@inject NavigationManager UriHelper
+@inject MessageService _message;
+@inject ApiService _apiService
+<Row Style="height:100%">
+    <Col Span="24" Style="height:30px">
+        <Breadcrumb RouteLabel="">
+            <BreadcrumbItem>
+                Home
+            </BreadcrumbItem>
+            <BreadcrumbItem>
+                Cho vay
+            </BreadcrumbItem>
+        </Breadcrumb>
+    </Col>
+    <Col Span="24" Style=";margin-top:10px;height:30px">
+        <Button Type="@AntDesign.ButtonType.Primary" Icon="@IconType.Outline.FileAdd" OnClick="() => OpenAddTrans()">Thêm Giao dịch</Button>
+    </Col>
+    <Col Span="24" Style=";margin-top:10px;height:50px">
+        
+        <span><b>Loại Giao Dịch:</b></span>
+        <span>
+            <Select DataSource="@selectTransactionTypes"
+                @bind-Value="@_selectedtranValue"
+                LabelName="@nameof(SelectTransactionType.Name)"
+                ValueName="@nameof(SelectTransactionType.TransactionType)"
+                Placeholder="Chọn loại Giao dịch"
+                OnSelectedItemChanged="@(async (Context) => await OnSelectedItemChangedHandler(Context))">
+            </Select>
+        </span>
+    </Col>
+    <Col Span="24" Style=";margin-top:10px; height:Calc(100% - 125px)">
+        <Table @ref="table"
+           TItem="TransactionDto"
+           DataSource="@transactions" Bordered
+        Style="height:100%" PageSize="50"> 
+            <RowTemplate>
+                <Column @bind-Field="@context.CustomerName" Title="Người mượn" Sortable  Filterable/>
+                <Column @bind-Field="@context.Amount" Format="C" Title="Tiền vay">
+                    @{
+                        <CurrencyFormat Value="@context.Amount"></CurrencyFormat>
+                    }
+                    
+                </Column>
+                <Column @bind-Field="context.InterestRate" Title="Lãi xuất">
+                    @if(context.InterestType == InterestType.Monthly || context.InterestType == InterestType.Yearly){
+                        <p>@context.InterestRate %</p>
+                    }else if(context.InterestType == InterestType.Daily ){
+                        <p><CurrencyFormat Value="@context.InterestAmount"></CurrencyFormat> (ngàn\ngày)</p>
+                    }else if(context.InterestType == InterestType.DayPerMilion ){
+                        <p><CurrencyFormat Value="@context.InterestAmount"></CurrencyFormat> (ngàn\Triệu\ngày)</p>
+                    }
+                </Column>
+                <Column @bind-Field="@context.CreatedDate" Format="dd/MM/yyyy" Title="Ngày Mượn" Filterable />
+                <Column @bind-Field="@context.DueDate" Format="dd/MM/yyyy" Title="Ngày trả" Filterable />
+                <Column @bind-Field="@context.DueAmount" Format="C" Title="Tiền còn nợ">
+                    @{
+                        <CurrencyFormat Value="@context.DueAmount"></CurrencyFormat>
+                    }
+                    
+                </Column>
+                <Column TData="decimal" Title="Tiền lãi tới hiện tại">
+                    @{
+                        var data = context.TransactionHistories.Where(x => x.PayType == PayType.PayInterest).OrderByDescending(x => x.InterestPayForMonth).FirstOrDefault();
+                        
+                        var val = @Helper.CaculationInterest(context.DueAmount, context.InterestType, data != null ? data.InterestPayForMonth : context.CreatedDate, context.InterestRate, context.InterestAmount);
+                        <CurrencyFormat Value="@val"></CurrencyFormat><span> ( từ @(data != null ? data.InterestPayForMonth.ToString("dd/MM/yyyy") : context.CreatedDate.ToString("dd/MM/yyyy")))</span>
+                    
+                    }
+                </Column>
+                <Column @bind-Field="@context.Description"  Title="Ghi Chú"/>
+                <Column @bind-Field="@context.IsPay" Title="Trạng thái">
+                    @if (context.IsPay)
+                    {
+                        <Tag Color="gray">Đã thanh toán</Tag>
+                    }
+                    else if(context.DueDate.Date < DateTime.Now.Date){
+                        <Tag Color="Red">Quá hạn</Tag>
+                    }else if(context.DueDate.Date == DateTime.Now.Date){
+                        <Tag Color="orange">Đến hạn</Tag>
+                    }else{
+                        <Tag Color="green">Đang thanh toán</Tag>
+                    }
+                </Column>
+                <ActionColumn Width="80px">
+                    @*<Space>
+                        <SpaceItem><Button Size="@ButtonSize.Small" OnClick="()=>OpenUpdateCus(context)">Cập nhật</Button></SpaceItem>
+                    </Space>
+                    |*@
+                    <Space>
+                        <Popconfirm Title="Xóa giao dịch này?"
+                            OnConfirm="()=> DeleteTransaction(context.Id)"
+                            OkText="Xóa"
+                            CancelText="Hủy">
+                            <SpaceItem><Button Size="@AntDesign.ButtonSize.Small" Danger>Xóa</Button></SpaceItem>
+                        </Popconfirm>
+                    </Space>
+                </ActionColumn>
+            </RowTemplate>
+            <ExpandTemplate Context="rowData">
+                <Card Title="Lịch sử thanh toán (5 Cái mới nhất)" Style="width:100%;">
+                    <Extra>
+                        <AntDesign.Tooltip Title=@("Thêm thanh toán")>
+                            <Button Type="@AntDesign.ButtonType.Primary" OnClick="()=>OpenAddHis(rowData.Data.Id)" Shape="@ButtonShape.Circle" Icon="@IconType.Outline.Plus"/>
+                        </AntDesign.Tooltip>
+
+                        <Space>
+                            <AntDesign.Tooltip Placement="@Placement.TopLeft" Title=@("Xem toàn bộ lịch sử thanh toán")>
+                                <SpaceItem><Button  OnClick="@(()=>NavigateToHis(rowData.Data.Id))" Icon="@IconType.Outline.DoubleRight"/></SpaceItem>
+                            </AntDesign.Tooltip>
+                        </Space>
+                    </Extra>
+                    <Body>
+                        <Table Size="TableSize.Small" TItem="TransactionHistoryDto"
+                            DataSource="rowData.Data.TransactionHistories" Bordered
+                            Style="height:100%" PageSize="50" HidePagination="@true">
+                                <Column @bind-Field="context.PayType" Title="Loại Thanh Toán">
+                                @{
+                                    @if (context.PayType == PayType.PayInterest)
+                                    {
+                                        <p>Trả lãi</p>
+                                    }
+                                    else if(context.PayType == PayType.Installment){
+                                        <p>Trả góp</p>
+                                    }else if(context.PayType == PayType.PayAll){
+                                        <p>Thanh toán hết</p>
+                                    }
+                                }
+                                </Column>
+                                <Column @bind-Field="context.CreatedDate" Format="dd/MM/yyyy" Title="Ngày Trả"/>
+                                <Column @bind-Field="@context.PayAmount" Format="C" Title="Số tiền">
+                                @if (context.PayType == PayType.PayInterest)
+                                    {
+                                        <CurrencyFormat Value="@context.PayAmount"></CurrencyFormat> 
+                                        <span>(@context.InterestPayForMonth.ToString("dd/MM/yyyy"))</span>
+                                    }
+                                    
+                                </Column>
+                                <Column @bind-Field="context.Description" Title="Ghi Chú"/>
+                    
+                        </Table>
+                    </Body>
+            </Card>
+            </ExpandTemplate>
+        </Table>
+    </Col>
+</Row>
+<AddTransactionPanel IsOpen="@_isOpenPanel" OnClose="_=> _isOpenPanel=false" Customers="@customers" AddTransaction="AddTransaction"></AddTransactionPanel>
+<Client.Pages.TransactionHistory.AddTransactionHistoryPanel IsOpen="@_isOpenAddHisPanel" OnClose="_=> _isOpenAddHisPanel=false" AddTransactionHis="AddTransactionHis"></Client.Pages.TransactionHistory.AddTransactionHistoryPanel>
+@code {
+    ITable table;
+    List<TransactionDto> transactions = new List<TransactionDto>();
+
+    bool _isOpenPanel = false;
+    bool _isOpenAddHisPanel = false;
+
+    string activeTransactionId = "";
+    TransactionType _selectedtranValue = TransactionType.Loan;
+    List<CustomerDto> customers = new List<CustomerDto>();
+    List<SelectTransactionType> selectTransactionTypes = new List<SelectTransactionType>()
+    {
+        new SelectTransactionType
+        {
+            Name = "Cho Vay",
+            TransactionType = TransactionType.Loan
+
+        },
+        new SelectTransactionType
+        {
+            Name = "Vay",
+            TransactionType = TransactionType.Borrow
+
+        }
+    };
+
+    protected override async Task OnInitializedAsync()
+    {
+        await getData(_selectedtranValue);
+        StateHasChanged();
+        //return Task.CompletedTask;
+    }
+
+    protected async Task getData(TransactionType type)
+    {
+        var res = await _apiService.TransactionService.GetTransactionAsync(type);
+        transactions = res.Data;
+    }
+
+    private async Task DeleteTransaction(string id)
+    {
+        var res = await _apiService.TransactionService.DeleteTransactionAsync(id);
+        if (res.Code == Infrastructure.Enums.ApiResponseCode.Success)
+        {
+            await _message.Success($"Delete Transaction successfully!");
+        }
+        else
+        {
+            await _message.Error($"delete Transaction error: {res.Message}");
+        }
+        await getData(_selectedtranValue);
+    }
+
+    protected async Task OpenAddTrans()
+    {
+        var res = await _apiService.CustomerService.GetCustomerAsync();
+        customers = res.Data;
+        _isOpenPanel = true;
+         StateHasChanged();
+    }
+
+    public async Task AddTransaction(TransactionDto model)
+    {
+        var res = await _apiService.TransactionService.AddTransactionAsync(model);
+        if (res.Code == Infrastructure.Enums.ApiResponseCode.Success)
+        {
+            await _message.Success($"Add Transaction successfully!");
+        }
+        else
+        {
+            await _message.Error($"Add Transaction error: {res.Message}");
+        }
+        await getData(_selectedtranValue);
+        _isOpenPanel = false;
+    }
+
+    private async Task OnSelectedItemChangedHandler(SelectTransactionType type)
+    {
+        await getData(_selectedtranValue);
+        StateHasChanged();
+    }
+
+    void NavigateToHis(string transactionId){
+        UriHelper.NavigateTo($"/{transactionId}/transactionHistory");
+    }
+
+    protected void OpenAddHis(string transactionId)
+    {
+        activeTransactionId = transactionId;
+        _isOpenAddHisPanel = true;
+        //StateHasChanged();
+    }
+
+    public async Task AddTransactionHis(TransactionHistoryDto model)
+    {
+        model.TransactionId = activeTransactionId;
+        var res = await _apiService.TransactionHistoryService.AddTransactionHistoryAsync(model);
+        if (res.Code == Infrastructure.Enums.ApiResponseCode.Success)
+        {
+            await _message.Success($"Add Transaction History successfully!");
+        }
+        else
+        {
+            await _message.Error($"Add Transaction History error: {res.Message}");
+        }
+        await getData(_selectedtranValue);
+        _isOpenAddHisPanel = false;
+    }
+
+    public class SelectTransactionType
+    {
+        public string Name{ get; set; }
+        public TransactionType TransactionType{ get; set; }
+    }
+}
+
+<style>
+    .ant-table-wrapper .ant-table-responsive{
+        height: 100%;
+    }
+</style>

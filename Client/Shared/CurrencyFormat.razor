@@ -1,0 +1,15 @@
+@using System.Globalization
+<span>@($"{_displayVal} VNĐ") </span>
+
+@code{
+    [Parameter]
+    public decimal Value{get;set;}
+
+    string _displayVal = "";
+
+    protected override void OnParametersSet()
+    {
+        CultureInfo cul = CultureInfo.GetCultureInfo("vi-VN");   // try with "en-US"
+        _displayVal = Value == 0 ? "0" : Value.ToString("#,###", cul.NumberFormat);
+    }
+}

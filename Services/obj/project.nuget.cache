@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "dgSpecHash": "OhzxDmlllup/ywakrD4rdKHKMudqAnrbofhsvOwsy0KJHFIXR5iNTDgZCVuNqx2DWQN7coqRAAS8iZ9/JKLIeg==",
+  "success": true,
+  "projectFilePath": "D:\\Learn\\DotNet\\IdentityProject\\Services\\Services.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\hiepn\\.nuget\\packages\\microsoft.extensions.configuration.abstractions\\6.0.0\\microsoft.extensions.configuration.abstractions.6.0.0.nupkg.sha512",
+    "C:\\Users\\hiepn\\.nuget\\packages\\microsoft.extensions.primitives\\6.0.0\\microsoft.extensions.primitives.6.0.0.nupkg.sha512",
+    "C:\\Users\\hiepn\\.nuget\\packages\\scriban\\5.0.0\\scriban.5.0.0.nupkg.sha512",
+    "C:\\Users\\hiepn\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\6.0.0\\system.runtime.compilerservices.unsafe.6.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}

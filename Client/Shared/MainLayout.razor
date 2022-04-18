@@ -1,0 +1,58 @@
+﻿@inherits LayoutComponentBase
+@inject NavigationManager _navigation
+@using Client.Services.AuthenticateServices
+@inject AuthService _authService;
+@inject MessageService _message;
+<AuthorizeView>
+    <Authorized>
+        <Layout Style="min-height: 100vh; height:100%;">
+            <NavMenu></NavMenu>
+            <Layout Class="site-layout" Style="height: 100%;" >
+                <Header Class="site-layout-background" Style="position:sticky; z-index:100; top:0; padding:0" >
+                    <span>
+                        <Dropdown Trigger="@(new Trigger[] { Trigger.Click })" Style="float:right; margin-right:10px">
+                            <Overlay>
+                                <Menu>  
+                                    <MenuItem>
+                                        <Button Type="@AntDesign.ButtonType.Text" OnClick="()=>Logout()">Logout</Button>
+                                    </MenuItem>
+                                </Menu>
+                            </Overlay>
+                            <ChildContent>
+                                <Icon Type="setting" Style="font-size:20px" Theme="outline"/>
+
+                            </ChildContent>
+                        </Dropdown>
+                    </span>
+
+                    <span style="float: right; margin-right: 20px;">
+                        <Badge Count="5">
+                            <Icon Type="bell" Style="font-size:20px"/>
+                        </Badge>
+                    </span>
+                </Header>
+                <Content Style="margin:0 16px; height: Calc(100% - 64px); overflow: auto" >
+                    @Body
+                </Content>
+            </Layout>
+       </Layout>
+    </Authorized>
+    <Authorizing>
+        <p>We're authorizing you in now!</p>
+    </Authorizing>
+    <NotAuthorized>
+        <Client.Pages.Login.Login/>
+    </NotAuthorized>
+</AuthorizeView>
+
+@code{
+    protected override async Task OnInitializedAsync()
+    {
+        StateHasChanged();
+    }
+
+    private async Task Logout()
+    {
+        await _authService.Logout();
+    }
+}

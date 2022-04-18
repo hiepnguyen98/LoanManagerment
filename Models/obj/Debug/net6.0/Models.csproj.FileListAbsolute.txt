@@ -1,0 +1,15 @@
+D:\Learn\DotNet\IdentityProject\Models\bin\Debug\net6.0\Models.deps.json
+D:\Learn\DotNet\IdentityProject\Models\bin\Debug\net6.0\Models.dll
+D:\Learn\DotNet\IdentityProject\Models\bin\Debug\net6.0\ref\Models.dll
+D:\Learn\DotNet\IdentityProject\Models\bin\Debug\net6.0\Models.pdb
+D:\Learn\DotNet\IdentityProject\Models\bin\Debug\net6.0\Infrastructure.dll
+D:\Learn\DotNet\IdentityProject\Models\bin\Debug\net6.0\Infrastructure.pdb
+D:\Learn\DotNet\IdentityProject\Models\obj\Debug\net6.0\Models.csproj.AssemblyReference.cache
+D:\Learn\DotNet\IdentityProject\Models\obj\Debug\net6.0\Models.GeneratedMSBuildEditorConfig.editorconfig
+D:\Learn\DotNet\IdentityProject\Models\obj\Debug\net6.0\Models.AssemblyInfoInputs.cache
+D:\Learn\DotNet\IdentityProject\Models\obj\Debug\net6.0\Models.AssemblyInfo.cs
+D:\Learn\DotNet\IdentityProject\Models\obj\Debug\net6.0\Models.csproj.CoreCompileInputs.cache
+D:\Learn\DotNet\IdentityProject\Models\obj\Debug\net6.0\Models.csproj.CopyComplete
+D:\Learn\DotNet\IdentityProject\Models\obj\Debug\net6.0\Models.dll
+D:\Learn\DotNet\IdentityProject\Models\obj\Debug\net6.0\ref\Models.dll
+D:\Learn\DotNet\IdentityProject\Models\obj\Debug\net6.0\Models.pdb

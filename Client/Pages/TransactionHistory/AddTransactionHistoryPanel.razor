@@ -1,0 +1,68 @@
+@using Dtos
+@using Infrastructure.Enums
+<Drawer Closable="true" Visible="@IsOpen" Width="500" Title="@("Thêm Lịch sử giao dịch")" Placement="right" OnClose="ThisOnClose">
+    <div>
+        <AntDesign.Row>
+            <Col Span="24">
+                <Form Model="@transactionHisDto" 
+                      LabelColSpan="8"
+                      WrapperColSpan="16"
+                      OnFinish="ThisAddTransactionHis"
+                        ValidateOnChange="true"> 
+                    
+                    <FormItem Label="Loại giao dịch" Rules=@(new FormValidationRule[]{ new FormValidationRule{ Required = true } })>
+                        <RadioGroup @bind-Value="@context.PayType" >
+                            <Radio Value="@PayType.Installment">Trả Góp</Radio>
+                            <Radio Value="@PayType.PayInterest">Trả lãi</Radio>
+                            <Radio Value="@PayType.PayAll">Thanh Toán hết</Radio>
+                        </RadioGroup>
+                    </FormItem>
+                    <FormItem Label="Ngày Thanh Toán" Rules=@(new FormValidationRule[]{ new FormValidationRule{ Required = true } })>
+                        <DatePicker @bind-Value="@context.CreatedDate" Format="dd/MM/yyyy" TValue="DateTime" Picker="@DatePickerType.Date"/>
+                    </FormItem>
+                    @if(context.PayType == PayType.PayInterest){
+                        <FormItem Label="Trả lãi cho tháng" Rules=@(new FormValidationRule[]{ new FormValidationRule{ Required = true } })>
+                            <DatePicker @bind-Value="@context.InterestPayForMonth" Format="dd/MM/yyyy" TValue="DateTime" Picker="@DatePickerType.Date"/>
+                        </FormItem>
+                    }
+                    <FormItem Label="Số tiền Thanh Toán" Rules=@(new FormValidationRule[]{ new FormValidationRule{ Required = true } })>
+                        <Input @bind-Value="@context.PayAmount"/>
+                    </FormItem>
+                    <FormItem Label="Ghi chú" Rules=@(new FormValidationRule[]{ new FormValidationRule{ Required = true ,Type=FormFieldType.String, Len=10 } })>
+                        <Input @bind-Value="@context.Description" />
+                    </FormItem>
+                    
+                    <FormItem WrapperColOffset="8" WrapperColSpan="16">
+                        <Button Type="@AntDesign.ButtonType.Primary" HtmlType="submit">
+                            Lưu
+                        </Button>
+                    </FormItem>
+                </Form>
+            </Col>
+        </AntDesign.Row>
+    </div>
+</Drawer>
+
+@code {
+    [Parameter]
+    public bool IsOpen { get; set; }
+
+    [Parameter]
+    public EventCallback OnClose { get; set; }
+
+    [Parameter]
+    public EventCallback<TransactionHistoryDto> AddTransactionHis { get; set; }
+
+    TransactionHistoryDto transactionHisDto = new TransactionHistoryDto(){CreatedDate = DateTime.Now, InterestPayForMonth = DateTime.Now };
+
+    //bool _drawerOpen = false;
+    async Task ThisOnClose()
+    {
+        await OnClose.InvokeAsync();
+    }
+
+    async Task ThisAddTransactionHis()
+    {
+        await AddTransactionHis.InvokeAsync(transactionHisDto);
+    }
+}

@@ -1,0 +1,116 @@
+﻿@page "/{transactionId}/transactionHistory"
+
+@using Dtos
+@using Client.Services.ApiServices
+@using Infrastructure.Enums
+
+@inject MessageService _message;
+@inject ApiService _apiService
+<Row Style="height:100%">
+    <Col Span="24" Style="height:30px">
+        <Breadcrumb RouteLabel="">
+            <BreadcrumbItem>
+                Home
+            </BreadcrumbItem>
+            <BreadcrumbItem>
+                <a href="/transaction">giao dịch</a>
+            </BreadcrumbItem>
+            <BreadcrumbItem>
+                @($"{transaction.CustomerName}_{transaction.CreatedDate.ToString("dd/MM/yyyy")}")
+            </BreadcrumbItem>
+        </Breadcrumb>
+    </Col>
+    <Col Span="24" Style=";margin-top:10px;height:30px">
+        <Button Type="@AntDesign.ButtonType.Primary" Icon="@IconType.Outline.FileAdd" OnClick="() => OpenAddTranHis()">Thêm lịch sử Giao dịch</Button>
+    </Col>
+    
+    <Col Span="24" Style=";margin-top:10px; height:Calc(100% - 125px)">
+        <Table @ref="table"
+           TItem="TransactionHistoryDto"
+           DataSource="@transactionHis" Bordered
+        Style="height:100%" PageSize="50">
+            <Column @bind-Field="@context.PayType" Title="Loại Thanh Toán">
+            @{
+                @if (context.PayType == PayType.PayInterest)
+                {
+                    <p>Trả lãi</p>
+                }
+                else if(context.PayType == PayType.Installment){
+                    <p>Trả góp</p>
+                }else if(context.PayType == PayType.PayAll){
+                    <p>Thanh toán hết</p>
+                }
+            }
+            </Column>
+            <Column @bind-Field="@context.CreatedDate" Format="dd/MM/yyyy" Title="Ngày Trả"/>
+            <Column @bind-Field="@context.PayAmount" Format="C" Title="Số tiền">
+                <CurrencyFormat Value="@context.PayAmount"></CurrencyFormat>
+            </Column>
+            <Column @bind-Field="@context.Description" Title="Ghi Chú"/>
+            
+        </Table>
+    </Col>
+</Row>
+<AddTransactionHistoryPanel IsOpen="@_isOpenPanel" OnClose="_=> _isOpenPanel=false" AddTransactionHis="AddTransactionHis"></AddTransactionHistoryPanel>
+
+@code {
+    [Parameter]
+    public string TransactionId {get;set;}
+    ITable table;
+    List<TransactionHistoryDto> transactionHis = new List<TransactionHistoryDto>();
+    TransactionDto transaction = new TransactionDto();
+    TransactionHistoryDto TransactionHis = new TransactionHistoryDto();
+
+    bool _isOpenPanel = false;
+   
+    protected override async Task OnParametersSetAsync()
+    {
+        await getData(TransactionId);
+        await base.OnParametersSetAsync();
+    }
+
+    
+
+    protected override async Task OnInitializedAsync()
+    {
+        await getData(TransactionId);
+        StateHasChanged();
+        //return Task.CompletedTask;
+    }
+
+    protected async Task getData(string tranId)
+    {
+        var res = await _apiService.TransactionHistoryService.GetTransactionHistoryAsync(tranId);
+        transactionHis = res.Data;
+        transaction = await _apiService.TransactionService.GetTransactionItemAsync(tranId);
+    }
+
+    protected async Task OpenAddTranHis()
+    {
+        _isOpenPanel = true;
+    }
+
+    public async Task AddTransactionHis(TransactionHistoryDto model)
+    {
+        model.TransactionId = TransactionId;
+        var res = await _apiService.TransactionHistoryService.AddTransactionHistoryAsync(model);
+        if (res.Code == Infrastructure.Enums.ApiResponseCode.Success)
+        {
+            await _message.Success($"Add Transaction successfully!");
+        }
+        else
+        {
+            await _message.Error($"Add Transaction error: {res.Message}");
+        }
+        await getData(TransactionId);
+        _isOpenPanel = false;
+    }
+}
+
+<style>
+    .ant-table-wrapper .ant-table-responsive{
+        height: 100%;
+    }
+</style>
+
+

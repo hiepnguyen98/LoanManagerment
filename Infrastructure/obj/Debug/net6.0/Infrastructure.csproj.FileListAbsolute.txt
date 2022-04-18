@@ -1,0 +1,12 @@
+D:\Learn\DotNet\IdentityProject\Infrastructure\bin\Debug\net6.0\Infrastructure.deps.json
+D:\Learn\DotNet\IdentityProject\Infrastructure\bin\Debug\net6.0\Infrastructure.dll
+D:\Learn\DotNet\IdentityProject\Infrastructure\bin\Debug\net6.0\ref\Infrastructure.dll
+D:\Learn\DotNet\IdentityProject\Infrastructure\bin\Debug\net6.0\Infrastructure.pdb
+D:\Learn\DotNet\IdentityProject\Infrastructure\obj\Debug\net6.0\Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+D:\Learn\DotNet\IdentityProject\Infrastructure\obj\Debug\net6.0\Infrastructure.AssemblyInfoInputs.cache
+D:\Learn\DotNet\IdentityProject\Infrastructure\obj\Debug\net6.0\Infrastructure.AssemblyInfo.cs
+D:\Learn\DotNet\IdentityProject\Infrastructure\obj\Debug\net6.0\Infrastructure.csproj.CoreCompileInputs.cache
+D:\Learn\DotNet\IdentityProject\Infrastructure\obj\Debug\net6.0\Infrastructure.dll
+D:\Learn\DotNet\IdentityProject\Infrastructure\obj\Debug\net6.0\ref\Infrastructure.dll
+D:\Learn\DotNet\IdentityProject\Infrastructure\obj\Debug\net6.0\Infrastructure.pdb
+D:\Learn\DotNet\IdentityProject\Infrastructure\obj\Debug\net6.0\Infrastructure.csproj.AssemblyReference.cache

@@ -1,0 +1,56 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "7613d0fd-4dc1-47b6-abca-ce04ec6f7ad7": {
+      "ProjectGuid": "7613d0fd-4dc1-47b6-abca-ce04ec6f7ad7",
+      "DisplayName": "IdentityProject",
+      "ColorIndex": 0
+    },
+    "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3": {
+      "ProjectGuid": "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3",
+      "DisplayName": "Miscellaneous Files",
+      "ColorIndex": -1
+    },
+    "9d3eb7e4-9d04-4735-a0a2-3976ea5bed5e": {
+      "ProjectGuid": "9d3eb7e4-9d04-4735-a0a2-3976ea5bed5e",
+      "DisplayName": "Repository",
+      "ColorIndex": 1
+    },
+    "3d08f257-7f4b-43da-bd59-6894a46ca5dd": {
+      "ProjectGuid": "3d08f257-7f4b-43da-bd59-6894a46ca5dd",
+      "DisplayName": "Data",
+      "ColorIndex": 2
+    },
+    "d1ff705e-1dae-44d3-b54d-8ae8821c06f4": {
+      "ProjectGuid": "d1ff705e-1dae-44d3-b54d-8ae8821c06f4",
+      "DisplayName": "Models",
+      "ColorIndex": 3
+    },
+    "db865a4b-47bd-4098-bc3d-729dec3c3abd": {
+      "ProjectGuid": "db865a4b-47bd-4098-bc3d-729dec3c3abd",
+      "DisplayName": "Dtos",
+      "ColorIndex": 4
+    },
+    "1f7f0d59-5fb4-4865-82cf-333bc524b056": {
+      "ProjectGuid": "1f7f0d59-5fb4-4865-82cf-333bc524b056",
+      "DisplayName": "Services",
+      "ColorIndex": 5
+    },
+    "31404f36-692f-4cb3-9b0c-d3a25dbe164f": {
+      "ProjectGuid": "31404f36-692f-4cb3-9b0c-d3a25dbe164f",
+      "DisplayName": "Infrastructure",
+      "ColorIndex": 6
+    },
+    "3bbfa3b5-3980-4b8b-8b6d-1b6d88792cbd": {
+      "ProjectGuid": "3bbfa3b5-3980-4b8b-8b6d-1b6d88792cbd",
+      "DisplayName": "Client",
+      "ColorIndex": 7
+    },
+    "6593983b-2020-4a38-81f9-301774bd1d08": {
+      "ProjectGuid": "6593983b-2020-4a38-81f9-301774bd1d08",
+      "DisplayName": "Queries",
+      "ColorIndex": 8
+    }
+  },
+  "NextColorIndex": 9
+}

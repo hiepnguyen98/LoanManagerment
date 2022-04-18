@@ -1,0 +1,123 @@
+﻿@page "/customer"
+
+@using Dtos
+@using Client.Services.ApiServices
+
+@inject MessageService _message;
+@inject ApiService _apiService
+<Row>
+    <Col Span="24" Style="height:20px">
+        <Breadcrumb RouteLabel="">
+            <BreadcrumbItem>
+                Home
+            </BreadcrumbItem>
+            <BreadcrumbItem>
+                Customer
+            </BreadcrumbItem>
+        </Breadcrumb>
+    </Col>
+    <Col Span="24" Style=";margin-top:10px;height:30px">
+        <Button Type="@AntDesign.ButtonType.Primary" Icon="@IconType.Outline.UserAdd" OnClick="() => OpenAddCus()">Add</Button>
+    </Col>
+    <Col Span="24" Style=";margin-top:10px; height:Calc(100% - 100px)">
+        <Table @ref="table"
+           TItem="CustomerDto"
+           DataSource="@customers" Bordered
+        Style="height:100%" ScrollY="Calc(100% - 100px)" PageSize="50"> 
+
+            <Column @bind-Field="@context.Name" Title="Tên" Sortable />
+            <Column @bind-Field="@context.Address" Title="Địa chỉ"/>
+            <Column @bind-Field="@context.PhoneNumber" Title="Số điện thoại"/>
+            <Column @bind-Field="@context.Email" />
+            <ActionColumn>
+                <Space>
+                    <SpaceItem><Button Size="@AntDesign.ButtonSize.Small" OnClick="()=>OpenUpdateCus(context)">Cập nhật</Button></SpaceItem>
+                </Space>
+                |
+                <Space>
+                    <Popconfirm Title="Xóa người này?"
+                        OnConfirm="()=> DeleteCus(context.Id)"
+                        OkText="Xóa"
+                        CancelText="Hủy">
+                
+           
+                        <SpaceItem><Button Size="@AntDesign.ButtonSize.Small" Danger>Xóa</Button></SpaceItem>
+                 </Popconfirm>
+               </Space>
+            </ActionColumn>
+        </Table>
+    </Col>
+</Row>
+<AddUpdateCusComponent IsOpen="@_isOpenPanel" OnClose="_=> _isOpenPanel=false" Customer="@CustomerUpdate" AddCustomer="AddOrUpdateCus"></AddUpdateCusComponent>
+
+@code {
+    ITable table;
+    List<CustomerDto> customers = new List<CustomerDto>();
+
+    bool _isOpenPanel = false;
+    bool _isUpdate = false;
+    CustomerDto CustomerUpdate = new CustomerDto();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await getData();
+        StateHasChanged();
+        //return Task.CompletedTask;
+    }
+
+    private void OpenAddCus()
+    {
+        _isOpenPanel = true;
+        _isUpdate = false;
+    }
+    private void OpenUpdateCus(CustomerDto model)
+    {
+        _isUpdate = true;
+        CustomerUpdate = model;
+        _isOpenPanel = true;
+    }
+
+    private async Task AddOrUpdateCus(CustomerDto model)
+    {
+        var res = new BaseModelResponseDto();
+        if (_isUpdate)
+        {
+            res = await _apiService.CustomerService.UpdateCustomerAsync(model);
+        }
+        else
+        {
+            res = await _apiService.CustomerService.AddCustomerAsync(model);
+        }
+        _isOpenPanel = false;
+        await getData();
+        StateHasChanged();
+
+        if (res.Code == Infrastructure.Enums.ApiResponseCode.Success)
+        {
+            await _message.Success($"{(_isUpdate ? "Update" : "Create")} Customer successfully!");
+        }
+        else
+        {
+            await _message.Error($"{(_isUpdate ? "Update" : "Create")} Customer error: {res.Message}");
+        }
+    }
+
+    protected async Task getData()
+    {
+        var res = await _apiService.CustomerService.GetCustomerAsync();
+        customers = res.Data;
+    }
+    private async Task DeleteCus(string id)
+    {
+        var res = await _apiService.CustomerService.DeleteCustomerAsync(id);
+        if (res.Code == Infrastructure.Enums.ApiResponseCode.Success)
+        {
+            await _message.Success($"Delete Customer successfully!");
+        }
+        else
+        {
+            await _message.Error($"delete Customer error: {res.Message}");
+        }
+        await getData();
+    }
+}
