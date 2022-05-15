@@ -1,30 +1,46 @@
 ﻿@page "/auth/login"
 @using Client.Services.AuthenticateServices
 @using Dtos;
-@inject AuthService _authService;
+@inject IAuthService _authService;
 @inject MessageService _message;
+<div id="login">
+    <Card Bordered="true" Title=@("Đăng Nhập") Style="width: 350px" Id="login-panel"> 
+        <Body>
+            <Form Model="@model"
+            OnFinish="OnFinish"
+            ValidateMode="@FormValidateMode.Rules"
+            WrapperColSpan="24">
+                <FormItem Rules=@(new FormValidationRule[]{ new FormValidationRule{ Required = true, Message="Bạn cần phải nhập Email"} })>
+                    <Input @bind-Value="@context.Email" Placeholder="Nhập Email" />
+                </FormItem>
+                <FormItem Rules=@(new FormValidationRule[]{ new FormValidationRule{ Required = true, Message="Bạn cần phải nhập mật khẩu"} })>
+                    <InputPassword @bind-Value="@context.Password" Placeholder="Nhập mật Khẩu"/>
+                </FormItem>
 
-<Card Bordered="false" Title=@("Card title") Style="width: 300px"> 
-    <Body>
-        <Form Model="@model"
-          OnFinish="OnFinish"
-          LabelColSpan="8"
-          WrapperColSpan="16">
-            <FormItem Label="Email">
-                <Input @bind-Value="@context.Email" />
-            </FormItem>
-            <FormItem Label="Password">
-                <InputPassword @bind-Value="@context.Password" />
-            </FormItem>
+                <FormItem WrapperColSpan="24">
+                    <Button Type="@AntDesign.ButtonType.Primary" HtmlType="submit">
+                        Đăng nhập
+                    </Button>
+                    <a style="margin-left:10px" href="">Chưa có tài khoản?</a>
+                </FormItem>
+            </Form>
+            <Divider>or</Divider>
+            <Row>
+                <Col Span="24">
+                    <Button Style="width: 100%" Type="@AntDesign.ButtonType.Primary">
+                        <Icon Style="font-size:24px;" Type="facebook" Theme="outline"/> Đăng nhập bằng Facebook 
+                    </Button>
+                </Col>
+                <Col Span="24" Style="margin-top: 10px">
+                    <Button Style="width: 100%" Danger  Type="@AntDesign.ButtonType.Primary">
+                        <Icon Style="font-size:24px;" Type="google" Theme="outline"/> Đăng nhập bằng Google
+                    </Button>
+                </Col>
+            </Row>
+        </Body>
+    </Card>
+</div>
 
-            <FormItem WrapperColOffset="8" WrapperColSpan="16">
-                <Button Type="@AntDesign.ButtonType.Primary" HtmlType="submit">
-                    Submit
-                </Button>
-            </FormItem>
-        </Form>
-    </Body>
-</Card>
 @code {
     public UserDto model = new UserDto();
 
@@ -38,22 +54,21 @@
     {
         try
         {
-            Console.WriteLine("Login");
-            await _message.Loading("logging you in....");
+            await _message.Loading("Đang đăng nhập....");
             var result = await _authService.Login(model);
 
             if(result.Code == Infrastructure.Enums.ApiResponseCode.Success)
             {
-                await _message.Success("login successfully!", 2);
+                await _message.Success("Đăng nhập thành công!", 2);
             }
             else
             {
-                await _message.Error($"login error: {result.Message}", 2);
+                await _message.Error($"Lỗi đăng nhập: {result.Message}", 4);
             }
 
         }catch(Exception e)
         {
-            await _message.Error($"login error: {e.Message}", 2);
+            await _message.Error($"Lỗi đăng nhập: {e.Message}", 2);
             Console.WriteLine(e.Message);
         }
     }

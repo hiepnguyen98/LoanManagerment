@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "h/VpRYatAVqWN+YhCYBtrmxfWks2pi8aiLxH9NIl2ys=",
+  "Hash": "zgmkNdfr1rxq+t4qZ0kCr51CssKhfGpENLSSDfQ7150=",
   "Source": "Client",
   "BasePath": "/",
   "Mode": "Root",
@@ -13615,6 +13615,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\icon-192.png"
+    },
+    {
+      "Identity": "D:\\Learn\\DotNet\\IdentityProject\\Client\\wwwroot\\image\\background-image.jpg",
+      "SourceId": "Client",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\Learn\\DotNet\\IdentityProject\\Client\\wwwroot\\",
+      "BasePath": "/",
+      "RelativePath": "image/background-image.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\image\\background-image.jpg"
     },
     {
       "Identity": "D:\\Learn\\DotNet\\IdentityProject\\Client\\wwwroot\\index.html",

@@ -27,13 +27,13 @@ builder.Services.AddHttpClient<ApiService>(client =>
 
 builder.Services.AddOptions();
 builder.Services.AddAuthorizationCore();
-builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<AuthenticationStateProvider,CustomAuthenticationStateProvider>();
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.Configuration["ApiUrl"]) });
 
 builder.Services.AddScoped<DialogService>();
-        builder.Services.AddScoped<NotificationService>();
-        builder.Services.AddScoped<TooltipService>();
-        builder.Services.AddScoped<ContextMenuService>();
+builder.Services.AddScoped<NotificationService>();
+builder.Services.AddScoped<TooltipService>();
+builder.Services.AddScoped<ContextMenuService>();
 await builder.Build().RunAsync();

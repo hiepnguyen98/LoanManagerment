@@ -1,7 +1,7 @@
 ﻿@inherits LayoutComponentBase
 @inject NavigationManager _navigation
 @using Client.Services.AuthenticateServices
-@inject AuthService _authService;
+@inject IAuthService _authService;
 @inject MessageService _message;
 <AuthorizeView>
     <Authorized>

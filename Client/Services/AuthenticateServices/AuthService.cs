@@ -8,7 +8,7 @@ using System.Text.Json;
 
 namespace Client.Services.AuthenticateServices
 {
-    public class AuthService
+    public class AuthService : IAuthService
     {
         private readonly HttpClient _httpClient;
         private readonly AuthenticationStateProvider _authenticationStateProvider;
